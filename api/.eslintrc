@@ -1,0 +1,131 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/typescript"
+  ],
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "eslint-plugin-import"
+  ],
+  "rules": {
+    "@typescript-eslint/member-ordering": ["error", {
+        "default": {
+          "memberTypes": [
+          // Index signature
+          "signature",
+
+          // Fields
+          "private-static-field",
+          "protected-static-field",
+          "public-static-field",
+
+          "private-decorated-field",
+          "protected-decorated-field",
+          "public-decorated-field",
+
+          "private-instance-field",
+          "protected-instance-field",
+          "public-instance-field",
+
+          "private-abstract-field",
+          "protected-abstract-field",
+          "public-abstract-field",
+
+          "private-field",
+          "protected-field",
+          "public-field",
+
+          "static-field",
+          "instance-field",
+          "abstract-field",
+
+          "decorated-field",
+
+          "field",
+
+          // Constructors
+          "private-constructor",
+          "protected-constructor",
+          "public-constructor",
+
+          "constructor",
+
+          // Methods
+          "private-static-method",
+          "protected-static-method",
+          "public-static-method",
+
+          "private-decorated-method",
+          "protected-decorated-method",
+          "public-decorated-method",
+
+          "private-instance-method",
+          "protected-instance-method",
+          "public-instance-method",
+
+          "private-abstract-method",
+          "protected-abstract-method",
+          "public-abstract-method",
+
+          "private-method",
+          "protected-method",
+          "public-method",
+
+          "static-method",
+          "instance-method",
+          "abstract-method",
+
+          "decorated-method",
+
+          "method"
+        ]
+        // "order": "alphabetically"
+      }
+    }],
+    "semi": "off",
+    "@typescript-eslint/semi": ["error"],
+    "@typescript-eslint/member-delimiter-style": ["error",
+      {
+        "multiline": { "delimiter": "semi", "requireLast": true },
+        "singleline": { "delimiter": "semi", "requireLast": true }
+      }
+    ],
+    "object-curly-spacing": ["error", "always"],
+//    "@typescript-eslint/array-type": ["error", { "default": "generic" }],
+    "@typescript-eslint/no-array-constructor": "off",
+    "@typescript-eslint/no-unnecessary-type-constraint": "error",
+    "@typescript-eslint/no-invalid-this": "error",
+
+    "@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/ban-types": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/restrict-template-expressions": "warn",
+    "@typescript-eslint/no-floating-promises": "warn",
+    "@typescript-eslint/require-await": "warn",
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-unsafe-member-access": "warn",
+    "@typescript-eslint/no-unsafe-return": "warn",
+    "@typescript-eslint/no-misused-promises": "warn",
+    "@typescript-eslint/no-duplicate-imports": "warn",
+    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-inferrable-types": "off"
+    
+  }
+}

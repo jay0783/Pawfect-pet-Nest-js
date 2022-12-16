@@ -1,2 +1,20 @@
-# Pawfect-pet-Nest-js
-It contains backend of application that is based on the idea of pet sitting booking App and admin panel. It has 3 main portals in the App  
+# Pawfect Pet Sitter - Backend
+
+# database
+
+Postgres
+pgAdmin 4
+
+# run command
+
+cd api
+npm i
+npm run start
+
+# to migrate Files
+
+npm run start migration:run
+
+# for the documents
+
+npm run start apidoc

@@ -1,0 +1,97 @@
+#!groovy
+
+properties([disableConcurrentBuilds()])
+
+pipeline {
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+    timestamps()
+  }
+
+  environment {
+    DOCKER_REGISTRY = 'https://docker.psoft.pro'
+    SERVER_URI = 'ubuntu@ec2-3-127-243-133.eu-central-1.compute.amazonaws.com'
+    ENV = 'development'
+    HOME = '.'
+  }
+
+  agent any
+
+
+  stages {
+    stage('Fetch from SCM') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage("Build image") {
+      steps {
+        script {
+          docker.withRegistry("${env.DOCKER_REGISTRY}", 'psoft_registry') {
+            dir('api') {
+              docker.build("pawfect:${env.ENV}", "-f ./dockerfile ./")
+            }
+          }
+        }
+      }
+    }
+
+
+    stage('Lint source codes') {
+      steps {
+        script {
+          def customImage = docker.image("pawfect:${env.ENV}")
+          customImage.inside {
+            dir("api") {
+              sh "npm i"
+              sh "npm run lint"
+            }
+          }
+        }
+      }
+    }
+
+    stage("Test image") {
+      steps {
+        script {
+          def customImage = docker.image("pawfect:${env.ENV}")
+
+          customImage.inside {
+            sh "echo 'Test Passed!'"
+          }
+        }
+      }
+    }
+
+    stage("Publish image to registry") {
+      when {
+        branch 'staging'
+      }
+
+      steps {
+        script {
+          docker.withRegistry("${env.DOCKER_REGISTRY}", 'psoft_registry') {
+            def customImage = docker.image("pawfect:${env.ENV}")
+            customImage.push("${env.ENV}")
+            sh "docker rmi ${customImage.id}"
+          }
+        }
+      }
+    }
+
+    stage('Deploy to server') {
+      when {
+        branch 'staging'
+      }
+
+      steps {
+        script {
+          sshagent(credentials: ['pawfect-staging-ssh-key']) {
+            sh "ssh -o StrictHostKeyChecking=no ${SERVER_URI} 'cd p103-backend && docker-compose pull && docker-compose up'"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<html>
+  <script type="text/javascript" src="ua-parser.js"></script>
+  
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    function redirectToDeepLink() {
+      window.location.replace("pawfect://share" + urlParams.get("code"));
+    }
+    
+    function redirectToSite() {
+      window.location.replace("http://pawfect.com/share");
+      // window.location.replace("http://dev1.spaceo.in/pawfect_web_qa/share");
+    }
+
+    function main() {
+      console.log("123456");
+      var parser = new UAParser();
+      const uaResult = parser.getResult();
+      if (uaResult.device.type === 'mobile' || uaResult.device.type === 'tablet') {
+        redirectToDeepLink();
+        return;
+      }
+      
+      if (screen.width <= 830) {
+        redirectToDeepLink();
+        return;
+      }
+      
+      if ((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
+        redirectToDeepLink();
+        return;
+      }
+      
+      redirectToSite();
+    }
+    
+    main();
+  </script>
+
+</html>

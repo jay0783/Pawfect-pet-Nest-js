@@ -1,0 +1,84 @@
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: dockerfile
+    volumes:
+      - ./api:/home/node/backend
+      - /home/node/backend/node_modules
+      - ./logs:/home/node/backend/logs
+    ports:
+      - 9229:9229
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    # mem_limit: 1024m
+    mem_limit: 2048m
+    cpus: 1
+
+  db:
+    container_name: p103_postgresql
+    image: postgis/postgis
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: pawfect
+    logging:
+      driver: none
+
+  pgadmin:
+    container_name: p103_pgadmin
+    image: dpage/pgadmin4
+    volumes:
+      - ./db/pgadmin:/var/lib/pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    logging:
+      driver: none
+
+  redis:
+    container_name: p103_redis
+    image: redis:6.0.5-alpine
+    restart: unless-stopped
+    ports:
+      - 6333:6379
+    logging:
+      driver: none
+
+  prometheus:
+    container_name: p103_prometheus
+    image: prom/prometheus
+    restart: unless-stopped
+    volumes:
+      - ./data/prometheus:/etc/prometheus
+    ports:
+      - "9090:9090"
+    logging:
+      driver: none
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=illchangeitanyway
+    #volumes:
+    #- ./data/grafana/grafana.ini:/etc/grafana/grafana.ini
+    #- grafana_data:/var/lib/grafana grafana/grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    ports:
+      - "4000:3000"
+    logging:
+      driver: none
+
+volumes:
+  grafana_data: {}
